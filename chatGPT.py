@@ -7,7 +7,7 @@ import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
 
-openai.api_key = "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"
+openai.api_key = "api_key"
 name = "딸기"
 
 audio = pyaudio.PyAudio()
