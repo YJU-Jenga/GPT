@@ -1,10 +1,11 @@
 import openai
 import pyaudio
+import config
 import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
 
-openai.api_key = "api_key"
+openai.api_key = config.openai_api_key
 name = "딸기"
 
 audio = pyaudio.PyAudio()
