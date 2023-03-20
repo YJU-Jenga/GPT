@@ -1,8 +1,5 @@
-import os
 import openai
 import pyaudio
-import wave
-import requests
 import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
@@ -47,75 +44,3 @@ with sr.Microphone() as source:
                 playsound("gtts.mp3")
         except:
             print("Could not recognize your voice")
-
-# for index in range(audio.get_device_count()):
-#     desc = audio.get_device_info_by_index(index)
-#     print("DEVICE: {device}, INDEX: {index}, RATE: {rate}".format(device=desc["name"], index=index, rate=int(desc["defaultSampleRate"])))
-#
-# # 음성 녹음을 위한 파라미터 설정
-# CHUNK = 1024
-# FORMAT = pyaudio.paInt16
-# CHANNELS = 1
-# RATE = 44100
-# RECORD_SECONDS = 4
-# WAVE_OUTPUT_FILENAME = "output.wav"
-#
-# # PyAudio 객체 생성
-# p = pyaudio.PyAudio()
-#
-# # 음성 녹음 스트림 열기
-# stream = p.open(format=FORMAT,
-#                 channels=CHANNELS,
-#                 rate=RATE,
-#                 input=True,
-#                 frames_per_buffer=CHUNK)
-#
-# print("* 음성 녹음을 시작합니다.")
-#
-# # 음성 녹음 데이터를 저장할 리스트
-# frames = []
-#
-# # 음성 녹음 데이터 읽기
-# for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-#     data = stream.read(CHUNK)
-#     frames.append(data)
-#
-# print("* 음성 녹음이 완료되었습니다.")
-#
-# # 음성 녹음 스트림 닫기
-# stream.stop_stream()
-# stream.close()
-# p.terminate()
-#
-# # 음성 녹음 데이터를 WAV 파일로 저장
-# wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-# wf.setnchannels(CHANNELS)
-# wf.setsampwidth(p.get_sample_size(FORMAT))
-# wf.setframerate(RATE)
-# wf.writeframes(b''.join(frames))
-# wf.close()
-#
-# stream.stop_stream()
-# stream.close()
-# p.terminate()
-#
-# data = open("output.wav", "rb")
-#
-# Lang = "Kor" # Kor / Jan / Chn / Eng
-# URL = "https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=" + Lang
-#
-# ID = "nfztp9gjgb"
-# SECRET = "UJgcKgooTwOWfig0BQZv4Fc4SCH5g4Qu7RdVieHc"
-#
-# headers = {
-#     "Content-Type": "application/octet-stream", #Fix
-#     "X-NCP-APIGW-API-KEY-ID": ID,
-#     "X-NCP-APIGW-API-KEY": SECRET,
-# }
-#
-# response = requests.post(URL, data=data, headers=headers)
-# rescode = response.status_code
-#
-# prompt = response.json()
-#
-# print("입력한 질문 : ", prompt['text'])
