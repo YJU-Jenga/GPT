@@ -1,12 +1,79 @@
 import openai
 import pyaudio
 import config
+import build
+import pafy
+import ffmpeg
+import argparse
 import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
-from ytsrv import youtube_search
-from ytsrv import play_with_url
 # import RPi.GPIO as GPIO # 차후 라즈베리에서 사용하기 위한 GPIO 컨트롤러
+
+## youtube part
+
+DEVELOPER_KEY = config.youtube_api_key
+YOUTUBE_API_SERVICE_NAME = 'youtube'
+YOUTUBE_API_VERSION = 'v3'
+
+def youtube_search(options):
+    try:
+        youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--q', help='Search term', default=options)
+        parser.add_argument('--max-results', help='Max results', default=25)
+        args = parser.parse_args()
+
+        search_response = youtube.search().list(q=args.q, part='id,snippet', maxResults=args.max_results).execute()
+
+        videos = []
+        url = []
+
+        for search_result in search_response.get('items', []):
+            if search_result['id']['kind'] == 'youtube#video':
+                videos.append('%s (%s)' % (search_result['snippet']['title'], search_result['id']['videoId']))
+                url.append(search_result['id']['videoId'])
+
+        resultURL = "https://www.youtube.com/watch?v=" + url[0]
+        return resultURL
+
+    except:
+        print("Youtube Error")
+
+
+def play_with_url(play_url):
+    print(play_url)
+    video = pafy.new(play_url)
+    best = video.getbestaudio()
+    playurl = best.url
+    global play_flag
+    play_flag = 0
+
+    pya = pyaudio.PyAudio()
+    stream = pya.open(format=pya.get_format_from_width(width=2), channels=1, rate=16000, output=True)
+
+    try:
+        process = (ffmpeg
+                   .input(playurl, err_detect='ignore_err', reconnect=1, reconnect_streamed=1, reconnect_delay_max=5)
+                   .output('pipe:', format='wav', audio_bitrate=16000, ab=64, ac=1, ar='16k')
+                   .overwrite_output()
+                   .run_async(pipe_stdout=True)
+                   )
+
+        while True:
+            if play_flag == 0:
+                in_bytes = process.stdout.read(4096)
+                if not in_bytes:
+                    break
+                stream.write(in_bytes)
+        else:
+            stream.close()
+    finally:
+        stream.stop_stream()
+        stream.close()
+
+## youtube part end
+
 
 name = "딸기"
 
@@ -27,10 +94,24 @@ with sr.Microphone() as source:
                 audio = r.listen(source)
                 text = r.recognize_google(audio, language='ko-KR')
                 print("You said: ", text)
+
                 if '동화' and ('재생' or '읽어' or '틀어') in text:
                     tts = gTTS(text="어떤 동화를 읽어드릴까요?", lang="ko")
                     tts.save("gtts.mp3")
                     playsound("gtts.mp3")
+                    audio = r.listen(source)
+                    bookname = r.recognize_google(audio, language='ko-KR')
+                    if '금도끼' or '은도끼' in bookname:
+                        tts = gTTS(text="금도끼와 은도끼를 읽어드릴게요", lang="ko")
+                        playsound("./Stories/Original/kindok2.mp3")
+                    elif '견우' or '직녀' in bookname:
+                        tts = gTTS(text="견우와 직녀를 읽어드릴게요", lang="ko")
+                        playsound("./Stories/Original/kyeonwoo_wa_jiknyeo.mp3")
+                    elif '미운' or '아기' or '오리' in bookname:
+                        tts = gTTS(text="미운 아기 오리를 읽어드릴게요", lang="ko")
+                        playsound("./Stories/Original/miwoon_agi_ori.mp3")
+                    else:
+                        tts = gTTS(text="제가 잘 이해하지 못 했어요.", lang="ko")
 
                 elif ('엄마' and '아빠') and ('재생' or '읽어' or '틀어') in text:
                     tts = gTTS(text="어떤 동화를 읽어드릴까요?", lang="ko")
@@ -38,9 +119,25 @@ with sr.Microphone() as source:
                     playsound("gtts.mp3")
 
                 elif '유튜브' and ('재생' or '읽어' or '틀어') in text:
-                    tts = gTTS(text="유튜브에서 재생을 시작합니다.?", lang="ko")
+                    tts = gTTS(text="", lang="ko")
                     tts.save("gtts.mp3")
                     playsound("gtts.mp3")
+                    if text.find("재생") >= 0 or text.find("일어") >= 0 or text.find("틀어") >= 0:
+                        split_text = text.split(" ")
+                        serach_text = split_text[split_text.index("를") - 1]
+                        output_file = "search_text.wav"
+                        tts = gTTS(text = "유튜브에서 " + serach_text + "를 재생합니다.", lang="ko")
+                        tts.save("gtts.mp3")
+                        playsound("gtts.mp3")
+
+
+                        result_url = youtube_search(serach_text)
+                        play_with_url(result_url)
+                    else:
+                        tts = gTTS(text="제가 잘 이해하지 못 했어요.", lang="ko")
+                        tts.save("gtts.mp3")
+                        playsound("gtts.mp3")
+
 
                 else:
                     response = openai.Completion.create(
