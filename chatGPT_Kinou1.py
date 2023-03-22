@@ -4,10 +4,11 @@ import config
 import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
+from ytsrv import youtube_search
+from ytsrv import play_with_url
+# import RPi.GPIO as GPIO # 차후 라즈베리에서 사용하기 위한 GPIO 컨트롤러
 
 name = "딸기"
-storybook = "동화"
-readplz = "읽어"
 
 openai.api_key = config.openai_api_key
 
@@ -26,11 +27,21 @@ with sr.Microphone() as source:
                 audio = r.listen(source)
                 text = r.recognize_google(audio, language='ko-KR')
                 print("You said: ", text)
-                if storybook in text:
-                    whatbook = "어떤 동화를 읽어드릴까요?"
-                    tts = gTTS(text=whatbook, lang="ko")
+                if '동화' and ('재생' or '읽어' or '틀어') in text:
+                    tts = gTTS(text="어떤 동화를 읽어드릴까요?", lang="ko")
                     tts.save("gtts.mp3")
                     playsound("gtts.mp3")
+
+                elif ('엄마' and '아빠') and ('재생' or '읽어' or '틀어') in text:
+                    tts = gTTS(text="어떤 동화를 읽어드릴까요?", lang="ko")
+                    tts.save("gtts.mp3")
+                    playsound("gtts.mp3")
+
+                elif '유튜브' and ('재생' or '읽어' or '틀어') in text:
+                    tts = gTTS(text="유튜브에서 재생을 시작합니다.?", lang="ko")
+                    tts.save("gtts.mp3")
+                    playsound("gtts.mp3")
+
                 else:
                     response = openai.Completion.create(
                         model="text-davinci-003",
