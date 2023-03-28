@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import re
 import time
 import pymysql
+
 import config
 
 
@@ -22,6 +23,7 @@ def get_book_titles():
 
     # title list
     title_list = []
+    detail_list = []
 
     # 전래동화 크롤링
     with webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options) as driver:
@@ -32,19 +34,34 @@ def get_book_titles():
             # 페이지 로딩 대기 (로딩이 완료되면 즉시 다음 코드 실행)
             driver.implicitly_wait(10)
 
-            elements = driver.find_elements(By.CLASS_NAME, "title")
+            elements_title = driver.find_elements(By.CLASS_NAME, "title")
 
-            for element in elements:
-                title_name = element.find_elements(By.TAG_NAME, "a")
-                title = title_name[0].text
+            # 동화 제목 크롤링
+            for element in elements_title:
+                titles = element.find_elements(By.TAG_NAME, "a")
+
+                title = titles[0].text
                 title_list.append(title)
+
+            # 동화 내용 크롤링
+            for j in range(1, 6):
+                detail = driver.find_element(By.XPATH, f'//*[@id="content"]/div[2]/div[1]/ul/li[{j}]/dl/dt/a')
+                detail.click()
+
+                elements_content = driver.find_elements(By.CLASS_NAME, 'content')
+
+                for element in elements_content:
+                    element_text = element.text
+                    detail_list.append(element_text)
+                driver.back()
 
     # 한글만 남게 하기
     title_replace = [re.sub(r"[^가-힣]", "", title) for title in title_list]
-    return title_replace
+    return title_replace, detail_list
 
 
 # Database
+start = time.time()
 db = pymysql.Connect(
     host='localhost',
     user='jenga',
@@ -58,14 +75,21 @@ cursor = db.cursor()
 sql = "TRUNCATE TABLE book"
 cursor.execute(sql)
 
-# 크롤링을 통해 책 제목 가져오기
-titles = get_book_titles()
-print(titles)
+# 크롤링을 통해 책 제목 및 내용 가져오기
+titles, details = get_book_titles()
+print("Titles: ", titles)
+print("Details: ", details)
+
+
 
 # Database Insert
 sql = "INSERT INTO book (title, detail) VALUES (%s, %s)"
-for title in titles:
-    cursor.execute(sql, (title, "안녕안녕 나는 지수야~ 헬륨가스 먹었더니 요로케 됐찌~"))
+for title, detail in zip(titles, details):
+    cursor.execute(sql, (title, detail))
 
 db.commit()
 db.close()
+
+end = time.time()
+
+print(f"{end - start:.5f} sec")
