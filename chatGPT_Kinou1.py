@@ -95,48 +95,64 @@ with sr.Microphone() as source:
                 text = r.recognize_google(audio, language='ko-KR')
                 print("You said: ", text)
 
-                if '동화' and ('재생' or '읽어' or '틀어') in text:
-                    tts = gTTS(text="어떤 동화를 읽어드릴까요?", lang="ko")
-                    tts.save("gtts.mp3")
-                    playsound("gtts.mp3")
-                    audio = r.listen(source)
-                    bookname = r.recognize_google(audio, language='ko-KR')
-                    if '금도끼' or '은도끼' in bookname:
-                        tts = gTTS(text="금도끼와 은도끼를 읽어드릴게요", lang="ko")
-                        playsound("./Stories/Original/kindok2.mp3")
-                    elif '견우' or '직녀' in bookname:
-                        tts = gTTS(text="견우와 직녀를 읽어드릴게요", lang="ko")
-                        playsound("./Stories/Original/kyeonwoo_wa_jiknyeo.mp3")
-                    elif '미운' or '아기' or '오리' in bookname:
-                        tts = gTTS(text="미운 아기 오리를 읽어드릴게요", lang="ko")
-                        playsound("./Stories/Original/miwoon_agi_ori.mp3")
-                    else:
-                        tts = gTTS(text="제가 잘 이해하지 못 했어요.", lang="ko")
+                # if '동화' and ('재생' or '읽어' or '틀어') in text:
+                #     tts = gTTS(text="어떤 동화를 읽어드릴까요?", lang="ko")
+                #     tts.save("gtts.mp3")
+                #     playsound("gtts.mp3")
+                #     audio = r.listen(source)
+                #     bookname = r.recognize_google(audio, language='ko-KR')
+                #     if '금도끼' or '은도끼' in bookname:
+                #         tts = gTTS(text="금도끼와 은도끼를 읽어드릴게요", lang="ko")
+                #         playsound("./Stories/Original/kindok2.mp3")
+                #     elif '견우' or '직녀' in bookname:
+                #         tts = gTTS(text="견우와 직녀를 읽어드릴게요", lang="ko")
+                #         playsound("./Stories/Original/kyeonwoo_wa_jiknyeo.mp3")
+                #     elif '미운' or '아기' or '오리' in bookname:
+                #         tts = gTTS(text="미운 아기 오리를 읽어드릴게요", lang="ko")
+                #         playsound("./Stories/Original/miwoon_agi_ori.mp3")
+                #     else:
+                #         tts = gTTS(text="제가 잘 이해하지 못 했어요.", lang="ko")
+                #
+                # elif ('엄마' and '아빠') and ('재생' or '읽어' or '틀어') in text:
+                #     tts = gTTS(text="어떤 동화를 읽어드릴까요?", lang="ko")
+                #     tts.save("gtts.mp3")
+                #     playsound("gtts.mp3")
+                #
+                # elif '유튜브' and ('재생' or '읽어' or '틀어') in text:
+                #     tts = gTTS(text="", lang="ko")
+                #     tts.save("gtts.mp3")
+                #     playsound("gtts.mp3")
+                #     if text.find("재생") >= 0 or text.find("일어") >= 0 or text.find("틀어") >= 0:
+                #         split_text = text.split(" ")
+                #         serach_text = split_text[split_text.index("를") - 1]
+                #         output_file = "search_text.wav"
+                #         tts = gTTS(text = "유튜브에서 " + serach_text + "를 재생합니다.", lang="ko")
+                #         tts.save("gtts.mp3")
+                #         playsound("gtts.mp3")
+                #
+                #
+                #         result_url = youtube_search(serach_text)
+                #         play_with_url(result_url)
+                #     else:
+                #         tts = gTTS(text="제가 잘 이해하지 못 했어요.", lang="ko")
+                #         tts.save("gtts.mp3")
+                #         playsound("gtts.mp3")
 
-                elif ('엄마' and '아빠') and ('재생' or '읽어' or '틀어') in text:
-                    tts = gTTS(text="어떤 동화를 읽어드릴까요?", lang="ko")
-                    tts.save("gtts.mp3")
-                    playsound("gtts.mp3")
-
-                elif '유튜브' and ('재생' or '읽어' or '틀어') in text:
+                if '유튜브' in text:
                     tts = gTTS(text="", lang="ko")
                     tts.save("gtts.mp3")
                     playsound("gtts.mp3")
-                    if text.find("재생") >= 0 or text.find("일어") >= 0 or text.find("틀어") >= 0:
+                    if text.find("재생") >= 0 or text.find("틀어") >= 0:
                         split_text = text.split(" ")
-                        serach_text = split_text[split_text.index("를") - 1]
+                        serach_text = split_text[split_text.index("재생", "틀어") - 1]
                         output_file = "search_text.wav"
                         tts = gTTS(text = "유튜브에서 " + serach_text + "를 재생합니다.", lang="ko")
                         tts.save("gtts.mp3")
                         playsound("gtts.mp3")
-
-
                         result_url = youtube_search(serach_text)
                         play_with_url(result_url)
-                    else:
-                        tts = gTTS(text="제가 잘 이해하지 못 했어요.", lang="ko")
-                        tts.save("gtts.mp3")
-                        playsound("gtts.mp3")
+                        print(serach_text)
+                        print(result_url)
 
 
                 else:
