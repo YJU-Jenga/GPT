@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+from tqdm import tqdm
 import re
 import time
 import pymysql
@@ -27,7 +28,7 @@ def get_book_titles():
 
     # Crawl each page for traditional fairy tales
     with webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options) as driver:
-        for i in range(1, maximum + 1):
+        for i in tqdm(range(1, maximum + 1)):
             URL = f"http://18children.president.pa.go.kr/our_space/fairy_tales.php?srh%5Bcategory%5D=07&srh%5Bpage%5D={i}"
             driver.get(URL)
 
@@ -68,6 +69,17 @@ db = pymysql.Connect(
     charset='utf8',
 )
 cursor = db.cursor()
+
+# Database Create Table
+# create_table_query = """
+# CREATE TABLE book (
+#     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+#     title VARCHAR(255),
+#     detail TEXT
+# )
+# """
+#
+# cursor.execute(create_table_query)
 
 # Clear book table in database
 sql = "TRUNCATE TABLE book"
