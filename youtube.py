@@ -6,10 +6,13 @@ import pafy
 import youtube_dl
 import ffmpeg
 import argparse
+from oauth2client.tools import argparser
 import speech_recognition as sr
 from gtts import gTTS
 from playsound import playsound
 # import RPi.GPIO as GPIO # 차후 라즈베리에서 사용하기 위한 GPIO 컨트롤러
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 ## youtube part
 
