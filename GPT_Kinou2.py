@@ -47,7 +47,7 @@ def get_text_from_speech():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("음성 명령을 기다리는 중...")
-        audio_data = r.listen(source, phrase_time_limit=5)
+        audio_data = r.listen_in_background(source, speak_text)
     text = ""
     try:
         text = r.recognize_google(audio_data, language='ko-KR')
@@ -158,5 +158,7 @@ def main():
 if __name__ == "__main__":
     pygame.init()
     r = sr.Recognizer()
-    print(connect_database(db_config))
+    db = connect_database(db_config)
+    for i in range(len(db)):
+        print(db[i][0])
     main()
