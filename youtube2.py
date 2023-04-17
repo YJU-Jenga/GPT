@@ -25,8 +25,13 @@ def play_audio(audio_path):
 
 # 실행 코드
 if __name__ == "__main__":
-    video_title = input("영상 제목을 입력하세요: ")
-    video_url = get_youtube_url(video_title)
-    audio_path = extract_audio(video_url)
-    play_audio(audio_path)
-    os.remove(audio_path)  # 임시 파일 삭제
+    try:
+        video_title = input("영상 제목을 입력하세요: ")
+        video_url = get_youtube_url(video_title)
+        audio_path = extract_audio(video_url)
+        play_audio(audio_path)
+    except Exception as e:
+        print(f"Error occurred: {e}")
+    finally:
+        if os.path.exists(audio_path):
+            os.remove(audio_path)
