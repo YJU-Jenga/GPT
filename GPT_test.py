@@ -1,3 +1,6 @@
+import os
+import threading
+
 import openai
 import pyaudio
 import pygame
@@ -51,7 +54,34 @@ def speech_to_text():
         print("음성을 인식할 수 없습니다.")
     except sr.RequestError as e:
         print("Google Speech Recognition 서비스에서 오류 발생; {0}".format(e))
-    return ""
+
+
+def split_text(text, n):
+    # 긴 텍스트를 n글자씩 분할하여 리스트로 반환
+    return [text[i:i + n] for i in range(0, len(text), n)]
+
+
+def tts_threads(text, n=200, delay=0.5):
+    # 긴 텍스트를 n글자씩 분할
+    text_list = split_text(text, n)
+
+    # 각각의 분할된 텍스트를 음성으로 변환하고 파일로 저장
+    threads = []
+    for i, t in enumerate(text_list):
+        thread = threading.Thread(target=text_to_speech, args=t)
+        threads.append(thread)
+        thread.start()
+        time.sleep(delay)
+
+    # 모든 쓰레드가 종료될 때까지 대기
+    for thread in threads:
+        thread.join()
+
+    # 저장된 음성 파일을 연속으로 재생
+    for i in range(len(text_list)):
+        file_name = "gtts.mp3"
+        pygame.mixer.Sound(file_name).play()
+        os.remove(file_name)
 
 
 # Text To Speech
@@ -98,8 +128,13 @@ def main():
                 pygame.mixer.Sound("start.mp3").play()
                 text = speech_to_text()
                 if '동화' in text:
+                    print("동화")
                     play_fairy_tale(database_list)
+                elif '유튜브' in text:
+                    print("유튜브")
+                    subprocess.run(['python', 'youtube.py'])
                 else:
+                    print("GPT")
                     response = openai.Completion.create(
                         model="text-davinci-003",
                         prompt=text,
