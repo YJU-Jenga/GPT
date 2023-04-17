@@ -1,3 +1,4 @@
+import pyaudio
 import requests
 import pytube
 import os
@@ -5,8 +6,7 @@ import config
 import pygame
 
 
-# 유튜브 URL을 가져오는 함수
-def get_youtube_url(video_title):
+def get_youtube_url(video_title: str) -> str:
     api_key = config.youtube_api_key
     url = f"https://www.googleapis.com/youtube/v3/search?key={api_key}&type=video&part=snippet&maxResults=1&q={video_title}"
     res = requests.get(url)
@@ -14,24 +14,33 @@ def get_youtube_url(video_title):
     return f"https://www.youtube.com/watch?v={video_id}"
 
 
-# 음성만 추출하는 함수
-def extract_audio(video_url):
+def extract_audio(video_url: str) -> str:
     yt = pytube.YouTube(video_url)
     stream = yt.streams.filter(only_audio=True).first()
-    output_path = stream.download()
-    return output_path
+    return stream.download()
 
 
-# 음성 재생 함수
 def play_audio(audio_path):
-    pygame.mixer.Sound(audio_path).play()
+    pygame.init()
+    pygame.mixer.music.load(audio_path)
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
+    pygame.quit()
 
 
-# 실행 코드
+def print_audio_info():
+    audio = pyaudio.PyAudio()
+    for i in range(audio.get_device_count()):
+        info = audio.get_device_info_by_index(i)
+        print("Index: {0}, Name: {1}, Channels: {2}, Max Input Channels: {3}".format(i, info['name'], info['maxInputChannels'], info['maxOutputChannels']))
+    audio.terminate()
+
+
 if __name__ == "__main__":
-    pygame.mixer.init()
+    print_audio_info()
     video_title = input("영상 제목을 입력하세요: ")
     video_url = get_youtube_url(video_title)
     audio_path = extract_audio(video_url)
     play_audio(audio_path)
-    os.remove(audio_path)  # 임시 파일 삭제
+    os.remove(audio_path)
