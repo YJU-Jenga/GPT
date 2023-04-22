@@ -1,6 +1,8 @@
+import pymysql
 from bs4 import BeautifulSoup
 import requests
 import time
+import config
 
 
 def get_title_list(page_number):
@@ -14,7 +16,7 @@ def get_content_list(page_number):
     URL = f"http://18children.president.pa.go.kr/our_space/fairy_tales.php?srh%5Bcategory%5D=07&srh%5Bpage%5D={page_number}"
     response = requests.get(URL)
     soup = BeautifulSoup(response.text, "html.parser")
-    return soup.select(".txt > a")
+    return [content.text.strip() for content in soup.select(".txt > a")]
 
 
 start = time.time()
@@ -27,4 +29,21 @@ print(f"{end - start:.5f} sec")
 print(title_list)
 print(content_list)
 
-# 300초가 넘게 걸림
+# Connect to database
+db = pymysql.Connect(
+    host='localhost',
+    user='jenga',
+    password=config.database_password,
+    database='jenga',
+    charset='utf8',
+)
+cursor = db.cursor()
+
+sql = "TRUNCATE TABLE book"
+cursor.execute(sql)
+
+sql = "INSERT INTO book (title, detail) VALUES (%s, %s)"
+for title, detail in zip(title_list, content_list):
+    cursor.execute(sql, (title, detail))
+db.commit()
+db.close()
