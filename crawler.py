@@ -1,49 +1,52 @@
 import pymysql
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 import time
 import config
 
 
-def get_title_list(page_number):
-    URL = f"http://18children.president.pa.go.kr/our_space/fairy_tales.php?srh%5Bcategory%5D=07&srh%5Bpage%5D={page_number}"
-    response = requests.get(URL)
+def fetch_titles_and_details(page_number):
+    url = f"http://18children.president.pa.go.kr/our_space/fairy_tales.php?srh%5Bcategory%5D=07&srh%5Bpage%5D={page_number}"
+    response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
-    return [title.text.strip().replace(" ", "") for title in soup.select(".title > a")]
+    titles = [title.text.strip().replace(" ", "") for title in soup.select(".title > a")]
+    details = [content.text.strip() for content in soup.select(".txt > a")]
+    return titles, details
 
 
-def get_content_list(page_number):
-    URL = f"http://18children.president.pa.go.kr/our_space/fairy_tales.php?srh%5Bcategory%5D=07&srh%5Bpage%5D={page_number}"
-    response = requests.get(URL)
-    soup = BeautifulSoup(response.text, "html.parser")
-    return [content.text.strip() for content in soup.select(".txt > a")]
+def main():
+    start = time.time()
+    maximum_page = 20
+    titles = []
+    details = []
+    for page_number in range(1, maximum_page + 1):
+        page_titles, page_details = fetch_titles_and_details(page_number)
+        titles.extend(page_titles)
+        details.extend(page_details)
+    end = time.time()
+
+    print(f"{end - start:.5f} sec")
+    print(titles)
+    print(details)
+
+    # Connect to database
+    db = pymysql.connect(
+        host='localhost',
+        user='jenga',
+        password=config.database_password,
+        database='jenga',
+        charset='utf8'
+    )
+
+    cursor = db.cursor()
+    cursor.execute("TRUNCATE TABLE book")
+
+    insert_query = "INSERT INTO book (title, detail) VALUES (%s, %s)"
+    for title, detail in zip(titles, details):
+        cursor.execute(insert_query, (title, detail))
+    db.commit()
+    db.close()
 
 
-start = time.time()
-maximum_page = 20
-title_list = [title for page_number in range(1, maximum_page + 1) for title in get_title_list(page_number)]
-content_list = [content for page_number in range(1, maximum_page + 1) for content in get_content_list(page_number)]
-end = time.time()
-
-print(f"{end - start:.5f} sec")
-print(title_list)
-print(content_list)
-
-# Connect to database
-db = pymysql.Connect(
-    host='localhost',
-    user='jenga',
-    password=config.database_password,
-    database='jenga',
-    charset='utf8',
-)
-cursor = db.cursor()
-
-sql = "TRUNCATE TABLE book"
-cursor.execute(sql)
-
-sql = "INSERT INTO book (title, detail) VALUES (%s, %s)"
-for title, detail in zip(title_list, content_list):
-    cursor.execute(sql, (title, detail))
-db.commit()
-db.close()
+if __name__ == '__main__':
+    main()
