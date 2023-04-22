@@ -16,7 +16,7 @@ from config import db_config
 
 
 # 동화 Database 생성
-# subprocess.run(['python', 'crawling.py'])
+subprocess.run(['python', 'crawling.py'])
 
 
 # 동화 Database 연결
