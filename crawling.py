@@ -72,15 +72,15 @@ db = pymysql.Connect(
 cursor = db.cursor()
 
 # Database Create Table
-create_table_query = """
-CREATE TABLE book (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255),
-    detail TEXT
-)
-"""
+# create_table_query = """
+# CREATE TABLE book (
+#     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+#     title VARCHAR(255),
+#     detail TEXT
+# )
+# """
 
-cursor.execute(create_table_query)
+# cursor.execute(create_table_query)
 
 # Clear book table in database
 sql = "TRUNCATE TABLE book"
