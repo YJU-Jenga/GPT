@@ -10,6 +10,7 @@ import subprocess
 import pymysql
 import re
 import config
+from pydub import AudioSegment
 
 from gtts import gTTS
 from config import db_config
@@ -18,6 +19,8 @@ from config import db_config
 # 동화 Database 생성
 # subprocess.run(['python', 'crawling.py'])
 
+mp3_file = "gtts.mp3"
+wav_file = "gtts.wav"
 
 # 동화 Database 연결
 def connect_database(config):
@@ -79,16 +82,20 @@ def tts_threads(text, n=200, delay=0.5):
 
     # 저장된 음성 파일을 연속으로 재생
     for i in range(len(text_list)):
-        file_name = "gtts.wav"
+        file_name = "gtts.mp3"
+        audio = AudioSegment.from_mp3(mp3_file)
+        audio.export(wav_file, formet="wav")
         pygame.mixer.Sound(file_name).play()
         os.remove(file_name)
 
 
 # Text To Speech
 def text_to_speech(text):
-    file_name = "gtts.wav"
+    file_name = "gtts.mp3"
     tts = gTTS(text=text, lang='ko')
     tts.save(file_name)
+    audio = AudioSegment.from_mp3(mp3_file)
+    audio.export(wav_file, formet="wav")
     tts_sound = pygame.mixer.Sound(file_name)
     tts_sound.play()
 
