@@ -79,14 +79,14 @@ def tts_threads(text, n=200, delay=0.5):
 
     # 저장된 음성 파일을 연속으로 재생
     for i in range(len(text_list)):
-        file_name = "gtts.mp3"
+        file_name = "gtts.wav"
         pygame.mixer.Sound(file_name).play()
         os.remove(file_name)
 
 
 # Text To Speech
 def text_to_speech(text):
-    file_name = "gtts.mp3"
+    file_name = "gtts.wav"
     tts = gTTS(text=text, lang='ko')
     tts.save(file_name)
     tts_sound = pygame.mixer.Sound(file_name)
