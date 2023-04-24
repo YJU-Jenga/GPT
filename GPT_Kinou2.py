@@ -125,7 +125,7 @@ def main():
                 if pygame.mixer.get_busy():
                     pygame.mixer.stop()
                 print("네")
-                pygame.mixer.Sound("start.mp3").play()
+                pygame.mixer.Sound("start.wav").play()
                 text = speech_to_text()
                 if '동화' in text:
                     print("동화")
