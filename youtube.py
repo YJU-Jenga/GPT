@@ -9,7 +9,7 @@ import pygame
 import time
 
 
-def get_youtube_url(video_title: str) -> str:
+def get_youtube_url(video_title: str):
     api_key = config.youtube_api_key
     url = f"https://www.googleapis.com/youtube/v3/search?key={api_key}&type=video&part=snippet&maxResults=1&q={video_title}"
     res = requests.get(url)
@@ -17,7 +17,7 @@ def get_youtube_url(video_title: str) -> str:
     return f"https://www.youtube.com/watch?v={video_id}"
 
 
-def extract_audio(video_url: str) -> str:
+def extract_audio(video_url: str):
     yt = pytube.YouTube(video_url)
     stream = yt.streams.filter(only_audio=True).first()
     return stream.download()
