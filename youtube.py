@@ -14,10 +14,11 @@ from gtts import gTTS
 # 유튜브 URL을 가져오는 함수
 def get_youtube_url(video_title):
     api_key = config.youtube_api_key
-    url = f"https://www.googleapis.com/youtube/v3/search?key={api_key}&type=video&part=snippet&maxResults=1&q={video_title}"
+    url = "https://www.googleapis.com/youtube/v3/search?key={}&type=video&part=snippet&maxResults=1&q={}".format(
+        api_key, video_title)
     res = requests.get(url)
     video_id = res.json()["items"][0]["id"]["videoId"]
-    return f"https://www.youtube.com/watch?v={video_id}"
+    return "https://www.youtube.com/watch?v={}".format(video_id)
 
 
 # 음성만 추출하는 함수
