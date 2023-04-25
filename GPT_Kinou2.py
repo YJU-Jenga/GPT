@@ -84,7 +84,7 @@ def tts_threads(text, n=200, delay=0.5):
     for i in range(len(text_list)):
         file_name = "gtts.mp3"
         audio = AudioSegment.from_mp3(mp3_file)
-        audio.export(wav_file, formet="wav")
+        audio.export(wav_file, format="wav")
         pygame.mixer.Sound(wav_file).play()
         os.remove(file_name)
 
@@ -95,7 +95,7 @@ def text_to_speech(text):
     tts = gTTS(text=text, lang='ko')
     tts.save(file_name)
     audio = AudioSegment.from_mp3(mp3_file)
-    audio.export(wav_file, formet="wav")
+    audio.export(wav_file, format="wav")
     tts_sound = pygame.mixer.Sound(wav_file)
     tts_sound.play()
 
