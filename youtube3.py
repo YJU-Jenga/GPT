@@ -3,6 +3,7 @@ import requests
 import pytube
 import os
 
+from pydub import AudioSegment
 import MicrophoneStream as MS
 import config
 
@@ -22,6 +23,11 @@ def extract_audio(video_url):
     base, ext = os.path.splitext(output_path)
     new_file = base + '.mp3'
     os.rename(output_path, new_file)
+
+    # pydub 라이브러리를 사용하여 RIFF 형식으로 변환
+    audio = AudioSegment.from_mp3(new_file)
+    audio.export(new_file, format="wav")
+
     return new_file
 
 # 음성 재생 함수
