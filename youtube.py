@@ -79,7 +79,7 @@ if __name__ == "__main__":
         audio_path = extract_audio(video_url)
         play_audio(audio_path)
     except Exception as e:
-        print(f"Error occurred: {e}")
+        print("Error occurred: {}".format(e))
     finally:
         if audio_path and os.path.exists(audio_path):  # audio_path가 정의되어 있고, 파일이 존재하면 삭제
             os.remove(audio_path)
