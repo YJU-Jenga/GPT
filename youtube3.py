@@ -5,7 +5,6 @@ import os
 
 import MicrophoneStream as MS
 import config
-from playsound import playsound
 
 # 유튜브 URL을 가져오는 함수
 def get_youtube_url(video_title):
