@@ -61,7 +61,7 @@ wav_file = "gtts.wav"
 
 
 def text_to_speech(text):
-    file_name = "gtts.wav"
+    file_name = "gtts.mp3"
     tts = gTTS(text=text, lang='ko')
     tts.save(file_name)
     audio = AudioSegment.from_mp3(mp3_file)
