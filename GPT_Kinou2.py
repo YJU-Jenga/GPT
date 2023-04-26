@@ -142,7 +142,7 @@ def main():
                     play_fairy_tale(database_list)
                 elif '유튜브' in text:
                     print("유튜브")
-                    subprocess.run(['python', 'youtube.py'])
+                    subprocess.run(['python3', 'youtube.py'])
                 else:
                     print("GPT")
                     response = openai.Completion.create(
