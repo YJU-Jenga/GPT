@@ -74,6 +74,7 @@ def text_to_speech(text):
 if __name__ == "__main__":
     audio_path = None  # 초기화
     try:
+        text_to_speech("어떤 영상을 틀어줄까?")
         video_title = speech_to_text()
         video_url = get_youtube_url(video_title)
         audio_path = extract_audio(video_url)
