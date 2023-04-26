@@ -142,7 +142,9 @@ def main():
                     play_fairy_tale(database_list)
                 elif '유튜브' in text:
                     print("유튜브")
+                    speech_to_text("어떤 영상을 들려줄까?")
                     subprocess.run(['python3', 'youtube.py'])
+
                 else:
                     print("GPT")
                     response = openai.Completion.create(
