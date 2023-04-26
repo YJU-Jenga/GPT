@@ -10,6 +10,9 @@ import subprocess
 import pymysql
 import re
 import config
+import pytube
+import requests
+import MicrophoneStream as MS
 from pydub import AudioSegment
 
 from gtts import gTTS
