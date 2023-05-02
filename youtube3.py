@@ -17,15 +17,13 @@ def get_youtube_url(video_title):
 
 # 음성만 추출하는 함수
 def extract_audio(video_url):
-    yt = pytube.YouTube(video_url)
+    yt = pytube.YouTube(video_url, use_oauth=True, allow_oauth_cache=True)
     stream = yt.streams.filter(only_audio=True).first()
     output_path = stream.download()
-
     # pydub 라이브러리를 사용하여 RIFF 형식으로 변환
     audio = AudioSegment.from_file(output_path, format="mp4")
     new_file = os.path.splitext(output_path)[0] + "-.wav"
     audio.export(new_file, format="wav")
-
     return new_file
 
 
