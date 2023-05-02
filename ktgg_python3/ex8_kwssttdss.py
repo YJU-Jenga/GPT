@@ -18,7 +18,7 @@ import ex6_queryVoice as dss
 def main():
     # Example8 KWS+STT+DSS
 
-    KWSID = ['기가지니', '지니야', '친구야', '자기야']
+    # KWSID = ['기가지니', '지니야', '친구야', '자기야']
     while 1:
         recog = kws.test(KWSID[0])
         if recog == 200:
