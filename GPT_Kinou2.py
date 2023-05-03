@@ -10,9 +10,6 @@ import subprocess
 import pymysql
 import re
 import config
-import pytube
-import requests
-import MicrophoneStream as MS
 from pydub import AudioSegment
 
 from gtts import gTTS
@@ -143,6 +140,7 @@ def main():
                 elif '유튜브' in text:
                     print("유튜브")
                     text_to_speech("어떤 영상을 들려줄까?")
+                    time.sleep(1)
                     subprocess.run(['python3', 'youtube.py'])
 
                 else:
