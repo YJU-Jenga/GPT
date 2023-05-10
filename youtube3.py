@@ -30,7 +30,6 @@ def extract_audio(video_url):
 # 음성 재생 함수
 def play_audio(audio_path):
     MS.play_file(audio_path)
-
 # 실행 코드
 if __name__ == "__main__":
     audio_path = None  # 초기화

@@ -1,3 +1,4 @@
+# pytube 15 required
 import requests
 import pytube
 import os
@@ -13,7 +14,11 @@ def get_youtube_url(video_title):
 
 # 음성만 추출하는 함수
 def extract_audio(video_url):
-    stream = pytube.YouTube(video_url, use_oauth=True, allow_oauth_cache=True).streams.filter(only_audio=True).first()
+    # , use_oauth = True, allow_oauth_cache = True
+    # allow_oauth_cache = False 할 경우 구글 계정 다시 로그인 해야 함. 기본값 False
+    yt = pytube.YouTube(video_url)
+    print(yt)
+    stream = yt.streams.filter(only_audio=True).first()
     output_path = stream.download()
     return output_path
 
