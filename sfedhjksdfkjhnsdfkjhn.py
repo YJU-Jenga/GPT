@@ -3,7 +3,7 @@ import datetime
 import requests
 import json
 
-url = 'http://ichigo.aster1sk.com:5000/calendar/all'
+url = 'http://ichigo.aster1sk.com:5000/user/user_all'
 # url = 'http://13.125.180.187/user/user_all'
 
 # 만료 시간 설정
@@ -19,8 +19,6 @@ payload = {
     "iat": 1516239022,
     "exp": exp_timestamp
 }
-
-
 secret_key = 'at-secretKey'
 algorithm = 'HS256'
 
@@ -35,12 +33,7 @@ headers = {
     'Authorization': 'Bearer ' + token
 }
 
-# JSON 요청 보낼 데이터
-calpay = {
-    "userId": 1,
-}
-
-response = requests.post(url, json=calpay, headers=headers)
+response = requests.get(url, headers=headers)
 
 print("status_code: ", response.status_code)
 
@@ -53,32 +46,3 @@ if response.status_code == 200:
     # 반환된 JSON 데이터에서 필요한 값을 추출하여 사용합니다.
 else:
     print(f"Request failed with status code {response.status_code}")
-
-
-
-
-
-
-
-
-# import json
-# from playsound import playsound
-#
-# def play_sound_if_condition_met(json_data, condition):
-#     # 조건에 따라 소리를 재생시킵니다.
-#     if condition in json_data:
-#         playsound("sound.wav")
-#
-# def main():
-#     # JSON 파일을 로드합니다.
-#     with open('data.json') as f:
-#         json_data = json.load(f)
-#
-#     # 조건을 설정합니다.
-#     condition = "example_condition"
-#
-#     # 조건에 따라 소리를 재생시킵니다.
-#     play_sound_if_condition_met(json_data, condition)
-#
-# if __name__ == "__main__":
-#     main()
