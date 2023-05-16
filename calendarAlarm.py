@@ -37,7 +37,7 @@ print(token)
 
 headers = {
     "Content-type": "application/json",
-    'Authorization': 'Bearer ' + token
+    'Authorization': ('Bearer ' + token).encode()
 }
 
 # current_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
