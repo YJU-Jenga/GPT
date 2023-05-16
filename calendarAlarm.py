@@ -29,6 +29,7 @@ algorithm = 'HS256'
 token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 # token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 token = token_b
+# 아니 변경했다고 개새끼야
 # token = token_b
 print(token)
 # token = token[2:-1]
