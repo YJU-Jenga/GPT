@@ -1,5 +1,5 @@
 import jwt
-import datetime
+import datetime as tokendatetime
 import requests
 import json
 
@@ -7,16 +7,17 @@ url = 'http://ichigo.aster1sk.com:5000/user/user_all'
 # url = 'http://13.125.180.187/user/user_all'
 
 # 만료 시간 설정
-expires_in = datetime.timedelta(days=365)
-exp_time = datetime.datetime.utcnow() + expires_in
+expires_in = tokendatetime.timedelta(days=365)
+exp_time = tokendatetime.datetime.utcnow() + expires_in
 exp_timestamp = int(exp_time.timestamp())
-iat_timestamp = int(datetime.datetime.utcnow().timestamp())
+iat_timestamp = int(tokendatetime.datetime.utcnow().timestamp())
 print(str(exp_time))
 
 payload = {
     "sub": "payload",
     "email": "payload",
-    "iat": 1516239022,
+    # "iat": 1516239022,
+    "iat": iat_timestamp,
     "exp": exp_timestamp
 }
 secret_key = 'at-secretKey'

@@ -1,5 +1,6 @@
 import jwt
-import datetime
+import datetime as tokendatetime
+from datetime import datetime as caldatetime
 import requests
 import json
 
@@ -7,16 +8,17 @@ url = 'http://ichigo.aster1sk.com:5000/calendar/all'
 # url = 'http://13.125.180.187/user/user_all'
 
 # 만료 시간 설정
-expires_in = datetime.timedelta(days=365)
-exp_time = datetime.datetime.utcnow() + expires_in
+expires_in = tokendatetime.timedelta(days=365)
+exp_time = tokendatetime.datetime.utcnow() + expires_in
 exp_timestamp = int(exp_time.timestamp())
-iat_timestamp = int(datetime.datetime.utcnow().timestamp())
+iat_timestamp = int(tokendatetime.datetime.utcnow().timestamp())
 print(str(exp_time))
 
 payload = {
     "sub": "payload",
     "email": "payload",
-    "iat": 1516239022,
+    # "iat": 1516239022,
+    "iat": iat_timestamp,
     "exp": exp_timestamp
 }
 
@@ -28,7 +30,7 @@ token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 # token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 token = str(token_b)
 token = token_b
-print(token)
+print("token: " + token)
 # token = token[2:-1]
 # print(token)
 
@@ -37,12 +39,18 @@ headers = {
     'Authorization': 'Bearer ' + token
 }
 
+# current_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+current_date = caldatetime.now().strftime("%Y-%m-%dT00:00:00.000Z")
+print("current_date: " + current_date)
+
 # JSON 요청 보낼 데이터
-calpay = {
+calpayload = {
     "userId": 1,
+    "dateString": current_date
+    # "dataString": "2023-04-17T09:00:00.000Z"
 }
 
-response = requests.post(url, json=calpay, headers=headers)
+response = requests.post(url, json=calpayload, headers=headers)
 
 print("status_code: ", response.status_code)
 
