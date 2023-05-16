@@ -25,8 +25,10 @@ algorithm = 'HS256'
 token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 # token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 token = str(token_b)
-token = token[2:-1]
-print(token)
+print("b : "+token_b)
+token = token_b
+# token = token[2:-1]
+# print(token)
 
 headers = {
     "Content-type": "application/json",

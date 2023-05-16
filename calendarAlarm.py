@@ -27,8 +27,10 @@ algorithm = 'HS256'
 token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 # token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 token = str(token_b)
-token = token[2:-1]
+token = token_b
 print(token)
+# token = token[2:-1]
+# print(token)
 
 headers = {
     "Content-type": "application/json",
@@ -51,6 +53,9 @@ if response.status_code == 200:
     data = response.json()
     print(data)
     # 반환된 JSON 데이터에서 필요한 값을 추출하여 사용합니다.
+elif response.status_code == 201:
+    data = response.json()
+    print(data)
 else:
     print(f"Request failed with status code {response.status_code}")
 
