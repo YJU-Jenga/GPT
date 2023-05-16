@@ -6,7 +6,6 @@ import GPT_Kinou2
 
 
 def set_timer():
-    pygame.mixer.init()
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("말씀해주세요.")
@@ -57,5 +56,7 @@ def extract_timer_duration(text):
 
 
 if __name__ == '__main__':
+    pygame.mixer.init()
+    pygame.mixer.Sound("start.wav").play()
     GPT_Kinou2.print_audio_info()
     set_timer()
