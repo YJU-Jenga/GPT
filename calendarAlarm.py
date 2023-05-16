@@ -4,7 +4,7 @@ from datetime import datetime as caldatetime
 import requests
 import json
 
-url = 'http://ichigo.aster1sk.com:5000/calendar/all'
+url = 'http://ichigo.aster1sk.com:5000/calendar/date'
 # url = 'http://13.125.180.187/user/user_all'
 
 # 만료 시간 설정
@@ -47,7 +47,6 @@ print("current_date: " + current_date)
 calpayload = {
     "userId": 1,
     "dateString": current_date
-    # "dataString": "2023-04-17T09:00:00.000Z"
 }
 
 response = requests.post(url, json=calpayload, headers=headers)
