@@ -30,8 +30,8 @@ token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 # token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 
 # 밑 두줄은 Raspberry Pi의 Python3.7 에서만 사용하도록 해야함. (python3.7에서만 나타나는 에러 해결)
-# token_b = str(token_b)
-# token_b = token_b[2:-1]
+token_b = str(token_b)
+token_b = token_b[2:-1]
 print(token_b)
 
 headers = {
