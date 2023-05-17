@@ -66,10 +66,12 @@ elif response.status_code == 201:
 else:
     print(f"Request failed with status code {response.status_code}")
 
-title_text = data['title']
-description_text = data['description']
+title_text = str(data['title'])
+description_text = str(data['description'])
+
 GPT_Kinou2.text_to_speech(title_text)
 GPT_Kinou2.text_to_speech(description_text)
+
 print(f"알람 '{data['title']}'이 울립니다!")
 
 
