@@ -3,6 +3,8 @@ import datetime as tokendatetime
 from datetime import datetime as caldatetime
 import requests
 import GPT_Kinou2
+import ex4_getText2VoiceStream as tts
+import MicrophoneStream as MS
 import json
 
 url = 'http://ichigo.aster1sk.com:5000/calendar/date'
@@ -70,8 +72,14 @@ for data in data:
     title_text = str(data['title'])
     description_text = str(data['description'])
 
-    GPT_Kinou2.text_to_speech(title_text)
-    GPT_Kinou2.text_to_speech(description_text)
+    tts.getText2VoiceStream(title_text, "tts.wav")
+    MS.play_file("tts.wav")
+
+    tts.getText2VoiceStream(description_text, "tts.wav")
+    MS.play_file("tts.wav")
+
+    # GPT_Kinou2.text_to_speech(title_text)
+    # GPT_Kinou2.text_to_speech(description_text)
 
     print(f"알람 '{data['title']}'이 울립니다!")
 
