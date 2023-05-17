@@ -66,7 +66,7 @@ elif response.status_code == 201:
 else:
     print(f"Request failed with status code {response.status_code}")
 
-text = data['title' + 'description']
+text = (data['title'], data['description'])
 GPT_Kinou2.text_to_speech(text)
 print(f"알람 '{data['title']}'이 울립니다!")
 
