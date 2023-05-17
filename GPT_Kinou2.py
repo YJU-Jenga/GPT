@@ -13,7 +13,7 @@ import re
 from pydub import AudioSegment
 
 from gtts import gTTS
-from config import db_config
+# from config import db_config
 
 
 # 동화 Database 생성
