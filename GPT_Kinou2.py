@@ -9,7 +9,7 @@ import speech_recognition as sr
 import subprocess
 import pymysql
 import re
-import config
+# import config
 from pydub import AudioSegment
 
 from gtts import gTTS
