@@ -25,8 +25,7 @@ payload = {
 secret_key = 'at-secretKey'
 algorithm = 'HS256'
 
-token = jwt.encode(payload, secret_key,
-                   algorithm=algorithm)  # 밑 두줄은 Raspberry Pi의 Python3.7 에서만 사용하도록 해야함. (python3.7에서만 나타나는 에러 해결)
+token = jwt.encode(payload, secret_key, algorithm=algorithm)
 token = str(token)
 token = token[2:-1]
 print("token: " + str(token))
@@ -74,7 +73,7 @@ def check_alarm(alarms):
                 save_path = 'alarm.wav'
                 download_and_convert_audio(url, save_path)
                 pygame.mixer.Sound(save_path).play()
-                print(f"Downloaded and converted audio file for alarm '{alarm['name']}' from URL: {mp3_url}")
+                print(f"Downloaded and converted audio file for alarm")
             print(f"알람 '{alarm['name']}'이 울립니다!")
 
 
@@ -97,8 +96,21 @@ def download_and_convert_audio(url, save_path):
 
     # Convert to wav
     wav_file_path = save_path
-    audio = AudioSegment.from_file(audio_file_path, format=file_extension)
+
+    # Convert m4a to mp3 if the file extension is m4a
+    if file_extension == 'm4a':
+        mp3_file_path = f"audio.mp3"
+        AudioSegment.from_file(audio_file_path, format=file_extension).export(mp3_file_path, format='mp3')
+        audio = AudioSegment.from_file(mp3_file_path, format='mp3')
+    else:
+        audio = AudioSegment.from_file(audio_file_path, format=file_extension)
+
     audio.export(wav_file_path, format='wav')
+
+    # Clean up temporary files
+    os.remove(audio_file_path)
+    if file_extension == 'm4a':
+        os.remove(mp3_file_path)
 
     print(f"Downloaded and converted the audio file to {wav_file_path}")
 
