@@ -25,6 +25,7 @@ secret_key = 'at-secretKey'
 algorithm = 'HS256'
 
 token = jwt.encode(payload, secret_key, algorithm=algorithm)
+print("token: " + str(token))
 
 headers = {
     "Content-type": "application/json",
