@@ -77,6 +77,7 @@ def check_alarm():
                 mp3_url = "http://ichigo.aster1sk.com:5000/" + alarm['file']
                 save_path = 'alarm.mp3'  # Specify the save path for the downloaded mp3 file
                 download_mp3_from_url(mp3_url, save_path)
+                pygame.mixer.Sound("alarm.mp3").play()
                 print(f"Downloaded mp3 file for alarm '{alarm['name']}' from URL: {mp3_url}")
             print(f"알람 '{alarm['name']}'이 울립니다!")
 
