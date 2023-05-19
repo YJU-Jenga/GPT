@@ -27,12 +27,10 @@ secret_key = 'at-secretKey'
 algorithm = 'HS256'
 
 token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
-# token_b = jwt.encode(payload, secret_key, algorithm=algorithm)
 
 # 밑 두줄은 Raspberry Pi의 Python3.7 에서만 사용하도록 해야함. (python3.7에서만 나타나는 에러 해결)
 token_b = str(token_b)
 token_b = token_b[2:-1]
-print(token_b)
 
 headers = {
     "Content-type": "application/json",
@@ -75,9 +73,9 @@ def check_alarm():
             # 알람이 울릴 동작을 여기에 구현합니다.
             text = alarm['sentence']
             GPT_Kinou2.text_to_speech(text)
-            if alarm['file'] and alarm['file'].startswith('http'):  # Check if 'file' is a URL
-                mp3_url = alarm['file']
-                save_path = f"downloads/{alarm['name']}.mp3"  # Specify the save path for the downloaded mp3 file
+            if alarm['file']:  # Check if 'file' is a URL
+                mp3_url = "http://ichigo.aster1sk.com:5000/" + alarm['file']
+                save_path = 'alarm.mp3'  # Specify the save path for the downloaded mp3 file
                 download_mp3_from_url(mp3_url, save_path)
                 print(f"Downloaded mp3 file for alarm '{alarm['name']}' from URL: {mp3_url}")
             print(f"알람 '{alarm['name']}'이 울립니다!")
@@ -100,11 +98,12 @@ def download_mp3_from_url(url, save_path):
         file.write(response.content)
 
 
-pygame.mixer.init()
-while True:
-    current_time = time.localtime()
-    if current_time.tm_sec == 0:  # 매 분 정각인 경우에만 실행
-        # 실행할 함수 호출
-        print("Checking")
-        check_alarm()
-    time.sleep(1)
+if __name__ == '__main__':
+    pygame.mixer.init()
+    while True:
+        current_time = time.localtime()
+        if current_time.tm_sec == 0:  # 매 분 정각인 경우에만 실행
+            # 실행할 함수 호출
+            print("Checking")
+            check_alarm()
+        time.sleep(1)
