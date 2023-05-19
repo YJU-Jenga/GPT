@@ -24,7 +24,9 @@ payload = {
 secret_key = 'at-secretKey'
 algorithm = 'HS256'
 
-token = jwt.encode(payload, secret_key, algorithm=algorithm)
+token = jwt.encode(payload, secret_key, algorithm=algorithm)# 밑 두줄은 Raspberry Pi의 Python3.7 에서만 사용하도록 해야함. (python3.7에서만 나타나는 에러 해결)
+token = str(token)
+token = token[2:-1]
 print("token: " + str(token))
 
 headers = {
