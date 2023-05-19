@@ -1,3 +1,4 @@
+import os
 import jwt
 import datetime
 import requests
@@ -24,7 +25,8 @@ payload = {
 secret_key = 'at-secretKey'
 algorithm = 'HS256'
 
-token = jwt.encode(payload, secret_key, algorithm=algorithm)# 밑 두줄은 Raspberry Pi의 Python3.7 에서만 사용하도록 해야함. (python3.7에서만 나타나는 에러 해결)
+token = jwt.encode(payload, secret_key,
+                   algorithm=algorithm)  # 밑 두줄은 Raspberry Pi의 Python3.7 에서만 사용하도록 해야함. (python3.7에서만 나타나는 에러 해결)
 token = str(token)
 token = token[2:-1]
 print("token: " + str(token))
@@ -71,12 +73,28 @@ def check_alarm(alarms):
                 mp3_url = "http://ichigo.aster1sk.com:5000/" + alarm['file']
                 save_path = 'alarm.mp3'
                 download_mp3_from_url(mp3_url, save_path)
-                audio = AudioSegment.from_mp3("alarm.mp3")
-                audio.export("alarm.wav", format="wav")
-                pygame.mixer.Sound("alarm.wav").play()
-                print(f"Downloaded mp3 file for alarm '{alarm['name']}' from URL: {mp3_url}")
+                wav_path = 'alarm.wav'
+                convert_audio_to_wav(save_path, wav_path)
+                pygame.mixer.Sound(wav_path).play()
+                print(f"Downloaded and converted audio file for alarm '{alarm['name']}' from URL: {mp3_url}")
             print(f"알람 '{alarm['name']}'이 울립니다!")
 
+
+def convert_audio_to_wav(file_path, output_path):
+    file_extension = os.path.splitext(file_path)[1].lower()
+
+    if file_extension == '.mp3':
+        # MP3 to WAV conversion
+        audio = AudioSegment.from_mp3(file_path)
+        audio.export(output_path, format='wav')
+        print(f"Converted MP3 to WAV: {file_path} -> {output_path}")
+    elif file_extension == '.m4a':
+        # M4A to WAV conversion
+        audio = AudioSegment.from_file(file_path, format='m4a')
+        audio.export(output_path, format='wav')
+        print(f"Converted M4A to WAV: {file_path} -> {output_path}")
+    else:
+        print(f"Unsupported audio format: {file_extension}")
 
 def download_mp3_from_url(url, save_path):
     response = requests.get(url)
