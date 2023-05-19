@@ -19,6 +19,7 @@ def get_youtube_url(video_title):
 # 음성만 추출하는 함수
 def extract_audio(video_url):
     yt = pytube.YouTube(video_url)
+    print(yt)
     stream = yt.streams.filter(only_audio=True).first()
     output_path = stream.download()
 
