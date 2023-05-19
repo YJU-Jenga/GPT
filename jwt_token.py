@@ -41,15 +41,12 @@ response = requests.get(url, headers=headers)
 
 print("status_code: ", response.status_code)
 
-if response.status_code == 200:
-    # print(response)
-    # print(response.text)
-    # data = json.loads(response.text)
-    alarms = response.json()
-    print(alarms)
-    # 반환된 JSON 데이터에서 필요한 값을 추출하여 사용합니다.
-else:
-    print(f"Request failed with status code {response.status_code}")
+# if response.status_code == 200:
+#     alarms = response.json()
+#     print(alarms)
+#     # 반환된 JSON 데이터에서 필요한 값을 추출하여 사용합니다.
+# else:
+#     print(f"Request failed with status code {response.status_code}")
 
 
 def check_alarm():
@@ -104,6 +101,10 @@ def download_mp3_from_url(url, save_path):
 if __name__ == '__main__':
     pygame.mixer.init()
     while True:
+        if response.status_code == 200:
+            alarms = response.json()
+            print(alarms)
+            # 반환된 JSON 데이터에서 필요한 값을 추출하여 사용합니다.
         current_time = time.localtime()
         if current_time.tm_sec == 0:  # 매 분 정각인 경우에만 실행
             # 실행할 함수 호출
