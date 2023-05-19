@@ -11,12 +11,11 @@ from pydub import AudioSegment
 # url = 'http://13.125.180.187/user/user_all'
 url = 'http://ichigo.aster1sk.com:5000/alarm/getAll/1'
 
-# 만료 시간 설정
-expires_in = datetime.timedelta(days=365)
+# jwt token 설정
+expires_in = datetime.timedelta(days=365) # 만료 시간 설정
 exp_time = datetime.datetime.utcnow() + expires_in
 exp_timestamp = int(exp_time.timestamp())
 iat_timestamp = int(datetime.datetime.utcnow().timestamp())
-print(str(exp_time))
 
 payload = {
     "sub": "payload",
