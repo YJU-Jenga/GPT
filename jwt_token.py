@@ -70,31 +70,38 @@ def check_alarm(alarms):
             text = alarm['sentence']
             GPT_Kinou2.text_to_speech(text)
             if alarm['file']:
-                mp3_url = "http://ichigo.aster1sk.com:5000/" + alarm['file']
-                save_path = 'alarm.mp3'
-                download_mp3_from_url(mp3_url, save_path)
-                wav_path = 'alarm.wav'
-                convert_audio_to_wav(save_path, wav_path)
-                pygame.mixer.Sound(wav_path).play()
+                url = "http://ichigo.aster1sk.com:5000/" + alarm['file']
+                save_path = 'alarm.wav'
+                download_and_convert_audio(url, save_path)
+                pygame.mixer.Sound(save_path).play()
                 print(f"Downloaded and converted audio file for alarm '{alarm['name']}' from URL: {mp3_url}")
             print(f"알람 '{alarm['name']}'이 울립니다!")
 
 
-def convert_audio_to_wav(file_path, output_path):
-    file_extension = os.path.splitext(file_path)[1].lower()
+def download_and_convert_audio(url, save_path):
+    response = requests.get(url)
 
-    if file_extension == '.mp3':
-        # MP3 to WAV conversion
-        audio = AudioSegment.from_mp3(file_path)
-        audio.export(output_path, format='wav')
-        print(f"Converted MP3 to WAV: {file_path} -> {output_path}")
-    elif file_extension == '.m4a':
-        # M4A to WAV conversion
-        audio = AudioSegment.from_file(file_path, format='m4a')
-        audio.export(output_path, format='wav')
-        print(f"Converted M4A to WAV: {file_path} -> {output_path}")
+    # Determine file extension
+    if url.endswith('.m4a'):
+        file_extension = 'm4a'
+    elif url.endswith('.mp3'):
+        file_extension = 'mp3'
     else:
-        print(f"Unsupported audio format: {file_extension}")
+        print("Unsupported file format.")
+        return
+
+    # Save the downloaded file
+    audio_file_path = f"audio.{file_extension}"
+    with open(audio_file_path, 'wb') as file:
+        file.write(response.content)
+
+    # Convert to wav
+    wav_file_path = save_path
+    audio = AudioSegment.from_file(audio_file_path, format=file_extension)
+    audio.export(wav_file_path, format='wav')
+
+    print(f"Downloaded and converted the audio file to {wav_file_path}")
+
 
 def download_mp3_from_url(url, save_path):
     response = requests.get(url)
