@@ -28,7 +28,7 @@ token = jwt.encode(payload, secret_key, algorithm=algorithm)
 
 headers = {
     "Content-type": "application/json",
-    'Authorization': 'Bearer ' + token
+    'Authorization': 'Bearer ' + str(token)
 }
 
 pygame.mixer.init()
