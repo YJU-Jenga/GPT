@@ -5,6 +5,7 @@ import json
 import time
 import pygame
 import GPT_Kinou2
+from pydub import AudioSegment
 
 # url = 'http://ichigo.aster1sk.com:5000/user/user_all'
 # url = 'http://13.125.180.187/user/user_all'
@@ -77,7 +78,9 @@ def check_alarm():
                 mp3_url = "http://ichigo.aster1sk.com:5000/" + alarm['file']
                 save_path = 'alarm.mp3'  # Specify the save path for the downloaded mp3 file
                 download_mp3_from_url(mp3_url, save_path)
-                pygame.mixer.Sound("alarm.mp3").play()
+                audio = AudioSegment.from_mp3("alarm.mp3")
+                audio.export("alarm.wav", format="wav")
+                pygame.mixer.Sound("alarm.wav").play()
                 print(f"Downloaded mp3 file for alarm '{alarm['name']}' from URL: {mp3_url}")
             print(f"알람 '{alarm['name']}'이 울립니다!")
 
