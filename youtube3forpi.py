@@ -25,6 +25,7 @@ def extract_audio(video_url):
 
     # pydub 라이브러리를 사용하여 RIFF 형식으로 변환
     audio = AudioSegment.from_file(output_path, format="mp4")
+
     new_file = os.path.splitext(output_path)[0] + ".wav"
     audio.export(new_file, format="wav")
 
