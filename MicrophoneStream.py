@@ -5,8 +5,10 @@
 
 from __future__ import print_function
 
-import pyaudio
+import time
 import wave
+
+import pyaudio
 from six.moves import queue
 
 FORMAT = pyaudio.paInt16
@@ -104,5 +106,7 @@ def play_file(fname):
         data = wf.readframes(chunk)
 
     # cleanup stuff.
+    time.sleep(0.5)
     stream.close()
     p.terminate()
+
