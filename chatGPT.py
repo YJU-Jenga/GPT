@@ -10,6 +10,7 @@ name = "딸기"
 
 audio = pyaudio.PyAudio()
 r = sr.Recognizer()
+
 with sr.Microphone() as source:
     print("Speak:")
     while True:
