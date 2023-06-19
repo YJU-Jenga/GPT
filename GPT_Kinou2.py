@@ -15,12 +15,12 @@ from pydub import AudioSegment
 from gtts import gTTS
 from config import db_config
 
-
 # 동화 Database 생성
 # subprocess.run(['python', 'crawling.py'])
 
 mp3_file = "gtts.mp3"
 wav_file = "gtts.wav"
+
 
 # 동화 Database 연결
 def connect_database(config):
